@@ -66,6 +66,21 @@ public:
         return out;
     }
 
+    void sortByBubble(bool reversed = false){
+
+    }
+
+    void sortBySelection(bool reversed = false){
+
+    }
+
+    void sortByInsertion(bool reversed = false){
+
+    }
+
+    void sortByShell(bool reversed = false){
+
+    }
     ~Collection(){
         delete[] elements;
     }
