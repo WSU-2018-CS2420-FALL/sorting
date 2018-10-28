@@ -67,25 +67,72 @@ public:
     }
 
     void sortByBubble(bool reversed = false){
-
+        for(int i = 0; i < sz - 1; i++){
+            for(int j = 1; j < sz - i; j++){
+                if(lessOrGreaterThan(j, j-1, reversed)){
+                    swap(j, j-1);
+                }
+            }
+        }
     }
 
     void sortBySelection(bool reversed = false){
-
+        for(int i = 0; i < sz; i++){
+            swap(i, findMinOrMax(i, sz, reversed));
+        }
     }
 
     void sortByInsertion(bool reversed = false){
-
+        for(int i = 1; i < sz; i++){
+            for(int j = i; j >= 1 && lessOrGreaterThan(j, j-1, reversed); j--){
+                swap(j, j-1);
+            }
+        }
     }
 
     void sortByShell(bool reversed = false){
+        int h;
+        for(h = 1; h < sz / 3; h = 3 * h + 1);
 
+        while(h >= 1){
+            for(int i = h; i < sz; i++){
+                for(int j = i; j >= h && lessOrGreaterThan(j, j-h, reversed); j = j - h){
+                    swap(j, j-h);
+                }
+            }
+
+            h = h / 3;
+        }
     }
+
     ~Collection(){
         delete[] elements;
     }
 protected:
     int  sz, capacity;
     Item *elements;
+
+    void swap(int i, int j){
+        Item temp = elements[i];
+        elements[i] = elements[j];
+        elements[j] = temp;
+    }
+
+    bool lessOrGreaterThan(int i, int j, bool reversed){
+        return (!reversed && elements[i] < elements[j]) || 
+               (reversed && elements[i] > elements[j]);
+    }
+
+    int findMinOrMax(int start, int sz, bool reversed){
+        int minOrMax = start;
+
+        for(int i = start; i < sz; i++){
+            if(lessOrGreaterThan(i, minOrMax, reversed)){
+                minOrMax = i;
+            }
+        } 
+
+        return minOrMax;
+    }
 };
 #endif

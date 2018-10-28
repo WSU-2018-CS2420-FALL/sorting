@@ -46,11 +46,20 @@ struct SortRunningTime {
   }
 };
 int main(){
-  const int MAX_COLLECTION_SIZE = 10;
+  srand(time(NULL));
+  const int MAX_COLLECTION_SIZE = 210;
   Collection<int> original;
   for(int i = 0; i < MAX_COLLECTION_SIZE; i++){
-    original.add(rand() % MAX_COLLECTION_SIZE + 100);
+    original.add(rand() % (3 * MAX_COLLECTION_SIZE) + 100);
   }
+
+  // cout << original << endl;
+  // original.sortByInsertion();
+  // cout << original << endl;
+  // original.sortByInsertion(true);
+  // cout << original << endl;
+
+  
   SortRunningTime<int> runningTimes[] = {
     {SortAlgorithm::BUBBLE},
     {SortAlgorithm::SELECTION},
@@ -58,7 +67,7 @@ int main(){
     {SortAlgorithm::SHELL}
   };
 
-  for(auto rt : runningTimes){
+  for(auto& rt : runningTimes){
     Collection<int> a(original);
     rt.sort(a);
     auto start = high_resolution_clock::now();
@@ -85,11 +94,13 @@ int main(){
        << setw(15) << "Random"
        << setw(15) << "Revered" << endl;
 
-  for(auto rt : runningTimes){
-      cout << setw(15) << rt.label()
+  for(auto& rt : runningTimes){
+      cout << fixed << setprecision(2) << setw(15) << rt.label()
        << setw(15) << rt.sorted.count() 
        << setw(15) << rt.random.count()
        << setw(15) << rt.reversed.count() << endl;
   }    
+  
+  system("pause");
   return 0;
 }
