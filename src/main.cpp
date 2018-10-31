@@ -9,7 +9,8 @@ using namespace std;
 using namespace chrono;
 
 enum class SortAlgorithm{
-  BUBBLE, SELECTION, INSERTION, SHELL
+  BUBBLE, SELECTION, INSERTION, SHELLSORT,
+  QUICKSORT, MERGESORT, HEAPSORT
 };
 
 template <typename T>
@@ -30,8 +31,17 @@ struct SortRunningTime {
       case SortAlgorithm::INSERTION:
         c.sortByInsertion(reversed);
         break;
-      case SortAlgorithm::SHELL:
-        c.sortByShell(reversed);
+      case SortAlgorithm::SHELLSORT:
+        c.sortByShellsort(reversed);
+        break;
+      case SortAlgorithm::QUICKSORT:
+        c.sortByQuicksort(reversed);
+        break;
+      case SortAlgorithm::MERGESORT:
+        c.sortByMergesort(reversed);
+        break;
+      case SortAlgorithm::HEAPSORT:
+        c.sortByHeapsort(reversed);
         break;
     }
   }
@@ -41,30 +51,35 @@ struct SortRunningTime {
       case SortAlgorithm::BUBBLE: return "Bubble";
       case SortAlgorithm::SELECTION: return "Selection";
       case SortAlgorithm::INSERTION: return "Insertion";
-      case SortAlgorithm::SHELL: return "ShellSort";
+      case SortAlgorithm::SHELLSORT: return "Shellsort";
+      case SortAlgorithm::QUICKSORT: return "Quicksort";
+      case SortAlgorithm::MERGESORT: return "Mergesort";
+      case SortAlgorithm::HEAPSORT: return "Heapsort";
     }
   }
 };
 int main(){
   srand(time(NULL));
-  const int MAX_COLLECTION_SIZE = 210;
+  const int MAX_COLLECTION_SIZE = 100;
   Collection<int> original;
   for(int i = 0; i < MAX_COLLECTION_SIZE; i++){
     original.add(rand() % (3 * MAX_COLLECTION_SIZE) + 100);
   }
 
   // cout << original << endl;
-  // original.sortByInsertion();
+  // original.sortByQuicksort();
   // cout << original << endl;
-  // original.sortByInsertion(true);
+  // original.sortByQuicksort(true);
   // cout << original << endl;
 
-  
   SortRunningTime<int> runningTimes[] = {
     {SortAlgorithm::BUBBLE},
     {SortAlgorithm::SELECTION},
     {SortAlgorithm::INSERTION},
-    {SortAlgorithm::SHELL}
+    {SortAlgorithm::SHELLSORT},
+    {SortAlgorithm::QUICKSORT},
+    {SortAlgorithm::MERGESORT},
+    {SortAlgorithm::HEAPSORT}
   };
 
   for(auto& rt : runningTimes){
@@ -101,6 +116,5 @@ int main(){
        << setw(15) << rt.reversed.count() << endl;
   }    
   
-  system("pause");
   return 0;
 }

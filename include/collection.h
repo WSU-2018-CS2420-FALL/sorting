@@ -2,6 +2,7 @@
 #define _COLLECTION_H_
 
 #include <iostream>
+#include <cstdlib>
 template<typename Item>
 class Collection {
 public:
@@ -90,7 +91,7 @@ public:
         }
     }
 
-    void sortByShell(bool reversed = false){
+    void sortByShellsort(bool reversed = false){
         int h;
         for(h = 1; h < sz / 3; h = 3 * h + 1);
 
@@ -105,8 +106,99 @@ public:
         }
     }
 
+    void sortByQuicksort(bool reversed = false){
+        quicksort(0, sz-1, reversed);
+    }
+
+    void quicksort(int lo, int hi, bool reversed){
+      if(lo < hi){
+          int m = partition(lo, hi, reversed);
+          quicksort(lo, m - 1, reversed);
+          quicksort(m + 1, hi, reversed);
+      }
+    }
+
+    int partition(int lo, int hi, bool reversed){
+      int r = rand() % (hi - lo + 1) + lo;
+      swap(r, hi);
+      int i = lo - 1;
+      for(int j = lo; j < hi; j++){
+        if(lessOrGreaterThan(j, hi, reversed)){
+          swap(++i, j);
+        }
+      }
+      swap(i + 1, hi);
+      return i + 1;
+    }
+
+    void sortByMergesort(bool reversed = false){
+      Item* aux = new Item[sz];
+      mergesort(aux, 0, sz-1, reversed);
+      delete[] aux;
+    }
+
+    void mergesort(Item* aux, int lo, int hi, bool reversed){
+      if (hi <= lo) return;
+
+      int mid = lo + (hi - lo)/2;
+      mergesort(aux, lo, mid, reversed); 
+      mergesort(aux, mid+1, hi, reversed);
+      merge(aux, lo, mid, hi, reversed);
+    }
+
+    void merge(Item* aux, int lo, int mid, int hi, bool reversed){
+      int i = lo;
+      int j = mid + 1;
+      
+      for(int k = lo; k <= hi; k++){
+        if(i > mid) aux[k] = elements[j++];
+        else if(j > hi) aux[k] = elements[i++];
+        else if(lessOrGreaterThan(i, j, reversed)){
+          aux[k] = elements[i++];
+        }else{
+          aux[k] = elements[j++];
+        }
+      }
+
+      for(int i = lo; i <= hi; i++){
+        elements[i] = aux[i];
+      }
+    }
+
+    void sortByHeapsort(bool reversed = false){
+      buildHeap(reversed);
+      for(int i = sz  - 1; i > 0; i--){
+        swap(0, i);
+        heapify(0, i, reversed);
+      }
+    }
+
+    void buildHeap(bool reversed){
+      for(int i = sz / 2 - 1; i >= 0; i--){
+        heapify(i, sz, reversed);
+      }
+    }
+
+    void heapify(int p, int hsz, bool reversed){
+      int left = 2 * p + 1;
+      int right = left + 1;
+      int largest = p;
+      if(left < hsz && lessOrGreaterThan(p , left, reversed)) {
+        largest = left;
+      }
+
+      if(right < hsz && lessOrGreaterThan(largest , right, reversed)) {
+        largest = right;
+      }
+
+      if(largest != p){
+        swap(p, largest);
+        heapify(largest, hsz, reversed);
+      }
+    }
+
     ~Collection(){
-        delete[] elements;
+      delete[] elements;
     }
 protected:
     int  sz, capacity;
